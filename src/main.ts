@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
+import { ConfigService } from '@nestjs/config';
+import { AppConfig } from './config/app/config';
 
 async function bootstrap() {
   /**
@@ -11,6 +13,13 @@ async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ logger: true }));
 
   /**
+   * ConfigService는 애플리케이션 구성을 관리하는데 사용됩니다.
+   * 이는 애플리케이션 구성을 로드하고 제공하는 서비스입니다.
+   */
+  const configService = app.get(ConfigService);
+  const appConfig = configService.getOrThrow<AppConfig>('app');
+
+  /**
    * Cross-Origin Resource Sharing (CORS) 설정
    * 허용도메인: * (모든 도메인)
    * 허용메서드: GET, PATCH, POST, PUT, DELETE, OPTIONS, HEAD
@@ -18,7 +27,7 @@ async function bootstrap() {
    * 자격증명: true
    */
   app.enableCors({
-    origin: '*',
+    origin: appConfig.cors.origin,
     methods: ['GET', 'PATCH', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
     credentials: true,
@@ -39,6 +48,6 @@ async function bootstrap() {
    * 포트: 3000
    * 호스트: 0.0.0.0
    */
-  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
+  await app.listen(appConfig.port, '0.0.0.0');
 }
 void bootstrap();

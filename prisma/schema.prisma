@@ -6,8 +6,8 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../src/modules/prisma/generated"
-  previewFeatures = ["driverAdapters", "queryCompiler", "strictUndefinedChecks"]
+  previewFeatures = ["strictUndefinedChecks"]
+  output = "../src/modules/prisma/generated"
 }
 
 generator erd {

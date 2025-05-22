@@ -28,7 +28,11 @@ async function bootstrap() {
    * Helmet은 보안 헤더를 설정하는데 사용됩니다.
    * 이는 웹 애플리케이션의 보안을 강화하는데 도움이 됩니다.
    */
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    }),
+  );
 
   /**
    * 서버 실행

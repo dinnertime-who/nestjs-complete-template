@@ -60,3 +60,4 @@ generated
 *.db-*
 migrations
 ERD.png
+.docker/

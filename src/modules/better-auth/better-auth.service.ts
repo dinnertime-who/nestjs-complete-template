@@ -4,16 +4,27 @@ import { FastifyRequest } from 'fastify';
 import { PrismaService } from '../prisma/prisma.service';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { jwt, openAPI } from 'better-auth/plugins';
+import { ConfigService } from '@nestjs/config';
+import { AuthConfig } from '@/config/auth/config';
+import { AppConfig } from '@/config/app/config';
 
 @Injectable()
 export class BetterAuthService {
   public readonly auth: ReturnType<typeof betterAuth>;
 
-  constructor(readonly prisma: PrismaService) {
+  constructor(
+    readonly prisma: PrismaService,
+    private readonly configService: ConfigService,
+  ) {
+    const { secret, url } = this.configService.getOrThrow<AuthConfig>('auth');
+    const { cors } = this.configService.getOrThrow<AppConfig>('app');
+
     this.auth = betterAuth({
       database: prismaAdapter(prisma.db, { provider: 'sqlite' }),
-      trustedOrigins: ['http://localhost:3000'],
+      trustedOrigins: cors.origin,
       plugins: [openAPI(), jwt()],
+      baseURL: url,
+      secret,
     });
   }
 

@@ -34,6 +34,7 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
       '@typescript-eslint/no-misused-promises': 'off',
+      '@typescript-eslint/no-unsafe-enum-comparison': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {

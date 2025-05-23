@@ -4,13 +4,17 @@ import { AppModule } from './app.module';
 import helmet from 'helmet';
 import { ConfigService } from '@nestjs/config';
 import { AppConfig } from './config/app/config';
+import { consoleLoggingConfig } from './tools/logger/logger-factory';
 
 async function bootstrap() {
   /**
    * FastifyAdapter는 Fastify 애플리케이션을 생성하는데 사용됩니다.
    * 이는 NestJS 애플리케이션을 제공하는 Fastify 프레임워크의 래퍼입니다.
    */
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ logger: true }));
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter({ logger: consoleLoggingConfig() }),
+  );
 
   /**
    * ConfigService는 애플리케이션 구성을 관리하는데 사용됩니다.
